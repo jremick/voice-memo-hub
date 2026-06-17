@@ -1,0 +1,22 @@
+.codex/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Runtime data belongs in ~/Library/Application Support/voice-memo-hub.
+data/
+runtime/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.m4a
+*.wav
+*.jsonl

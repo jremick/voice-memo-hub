@@ -1,0 +1,94 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "manual-external-writes",
+      "enabled": true,
+      "mode": "manual",
+      "reason": "External writes, deploys, commits, pushes, public posts, email, and device control stay manual.",
+      "match": {
+        "statuses": ["candidate", "approved"],
+        "contains_any": ["git commit", "git push", "deploy", "delete", "email", "publish", "release", "public post", "post to", "comment on", "create issue", "create ticket", "update issue", "update ticket", "change setting", "control device", "turn on", "turn off", "restart", "reboot", "archive"]
+      },
+      "action": {
+        "type": "manual_review"
+      }
+    },
+    {
+      "id": "review-reference-notification",
+      "enabled": true,
+      "mode": "approval_required",
+      "reason": "A reference that mentions notifications may be a misclassified request.",
+      "match": {
+        "kind": "reference",
+        "statuses": ["candidate", "approved"],
+        "contains_any": ["notify", "notification", "alert"]
+      },
+      "action": {
+        "type": "local_notification",
+        "title": "Voice Memo Hub",
+        "template": "Captured notification-like reference {action_id}."
+      }
+    },
+    {
+      "id": "auto-reference-review",
+      "enabled": true,
+      "mode": "auto",
+      "reason": "Reference-only captures are local DB updates.",
+      "match": {
+        "kind": "reference",
+        "statuses": ["candidate"]
+      },
+      "action": {
+        "type": "mark_reviewed",
+        "template": "Reference capture {action_id} was marked reviewed."
+      }
+    },
+    {
+      "id": "auto-prepare-codex-task",
+      "enabled": true,
+      "mode": "auto",
+      "reason": "Preparing a Codex task writes a local outbox prompt only.",
+      "match": {
+        "kind": "codex_request_candidate",
+        "statuses": ["candidate", "approved"],
+        "contains_any": ["codex", "automate", "background", "check", "run", "build", "fix"]
+      },
+      "action": {
+        "type": "prepare_codex_task",
+        "template": "Prepared Codex task for action {action_id}."
+      }
+    },
+    {
+      "id": "auto-fixed-local-notification",
+      "enabled": true,
+      "mode": "auto",
+      "reason": "Notification is fixed-template and does not execute the transcript text.",
+      "match": {
+        "kind": "codex_request_candidate",
+        "statuses": ["candidate", "approved"],
+        "contains_any": ["notify", "notification", "alert"]
+      },
+      "action": {
+        "type": "local_notification",
+        "title": "Voice Memo Hub",
+        "template": "Captured and transcribed memo {recording_id}."
+      }
+    },
+    {
+      "id": "approved-read-only-live-check",
+      "enabled": true,
+      "mode": "approval_required",
+      "reason": "Read-only checks are safe after review but may touch live services.",
+      "match": {
+        "kind": "codex_request_candidate",
+        "statuses": ["approved"],
+        "contains_any": ["status", "check", "verify", "look up", "read-only"]
+      },
+      "action": {
+        "type": "prepare_codex_task",
+        "template": "Prepared approved read-only check for action {action_id}."
+      }
+    }
+  ]
+}

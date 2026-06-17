@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "voice-memo-hub"
+version = "0.1.0a2"
+description = "Local Apple Voice Memos ingestion, transcription, search, and safe Codex workflow handoff."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+authors = [{ name = "Voice Memo Hub contributors" }]
+dependencies = []
+
+[project.optional-dependencies]
+transcribe = [
+  "mlx-whisper>=0.4.3",
+  "numpy>=2",
+  "scipy>=1.13",
+]
+
+[project.scripts]
+memo = "voice_memo_hub.cli:main"
+voice-memo-hub = "voice_memo_hub.cli:main"
+voice-memo-hub-mcp = "voice_memo_hub.mcp_server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

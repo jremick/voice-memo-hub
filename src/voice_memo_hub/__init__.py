@@ -1,0 +1,3 @@
+"""Voice Memo Hub package."""
+
+__version__ = "0.1.0a2"
